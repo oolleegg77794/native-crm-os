@@ -18,10 +18,10 @@ class UserController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
         $query = User::with(['role', 'profile', 'department'])
-            ->where('organization_id', $tenant->id);
+            ->where('organization_id', $orgId);
 
         if ($request->filled('search')) {
             $search = $request->query('search');
@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -58,7 +58,7 @@ class UserController extends Controller
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->where(fn ($q) => $q->where('organization_id', $tenant->id)),
+                Rule::unique('users', 'email')->where(fn ($q) => $q->where('organization_id', $orgId)),
             ],
             'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
@@ -69,7 +69,7 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'organization_id' => $tenant->id,
+            'organization_id' => $orgId,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
@@ -85,10 +85,10 @@ class UserController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
         $user = User::with(['role', 'profile', 'department'])
-            ->where('organization_id', $tenant->id)
+            ->where('organization_id', $orgId)
             ->findOrFail($id);
 
         return response()->json($user);
@@ -96,9 +96,9 @@ class UserController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
-        $user = User::where('organization_id', $tenant->id)->findOrFail($id);
+        $user = User::where('organization_id', $orgId)->findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
@@ -108,7 +108,7 @@ class UserController extends Controller
                 'email',
                 'max:255',
                 Rule::unique('users', 'email')
-                    ->where(fn ($q) => $q->where('organization_id', $tenant->id))
+                    ->where(fn ($q) => $q->where('organization_id', $orgId))
                     ->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8',
@@ -132,9 +132,9 @@ class UserController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
-        $user = User::where('organization_id', $tenant->id)->findOrFail($id);
+        $user = User::where('organization_id', $orgId)->findOrFail($id);
 
         // Prevent self-deletion
         if ($request->user()->id === $user->id) {
@@ -148,10 +148,10 @@ class UserController extends Controller
 
     public function getMetadata(Request $request): JsonResponse
     {
-        $tenant = $request->get('tenant');
+        $orgId = $request->user()->organization_id;
 
-        $roles = Role::where('organization_id', $tenant->id)->get();
-        $profiles = Profile::where('organization_id', $tenant->id)->get();
+        $roles = Role::where('organization_id', $orgId)->get();
+        $profiles = Profile::where('organization_id', $orgId)->get();
         $departments = Department::all();
 
         return response()->json([
