@@ -66,8 +66,11 @@
                 </button>
             </form>
 
-            <div class="text-center text-xs text-slate-500 pt-2 border-t border-slate-800/80">
-                Native Multi-Tenant Architecture &bull; PostgreSQL JSONB
+            <div class="text-center text-xs text-slate-400 pt-2 border-t border-slate-800/80 flex items-center justify-center gap-1.5">
+                <span>New organization?</span>
+                <router-link to="/register" class="text-indigo-400 hover:text-indigo-300 font-semibold transition">
+                    Create workspace
+                </router-link>
             </div>
         </div>
     </div>
