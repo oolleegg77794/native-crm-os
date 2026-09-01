@@ -100,7 +100,7 @@ class UserController extends Controller
 
         $user = User::where('organization_id', $orgId)->findOrFail($id);
 
-        $validated = $request->validate([
+        $rules = [
             'name' => 'sometimes|required|string|max:255',
             'email' => [
                 'sometimes',
@@ -111,13 +111,18 @@ class UserController extends Controller
                     ->where(fn ($q) => $q->where('organization_id', $orgId))
                     ->ignore($user->id),
             ],
-            'password' => 'nullable|string|min:8',
             'role_id' => 'sometimes|required|exists:roles,id',
             'profile_id' => 'sometimes|required|exists:profiles,id',
             'department_id' => 'nullable|exists:departments,id',
             'phone' => 'nullable|string|max:50',
             'is_active' => 'boolean',
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $rules['password'] = 'string|min:8';
+        }
+
+        $validated = $request->validate($rules);
 
         if (! empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);

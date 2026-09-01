@@ -206,13 +206,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                            {{ editingUser ? 'Password (leave blank to keep)' : 'Password' }}
+                            {{ editingUser ? 'Password (leave blank to keep current)' : 'Password' }}
                         </label>
                         <input
                             type="password"
                             v-model="userForm.password"
                             :required="!editingUser"
-                            minlength="8"
+                            :minlength="editingUser && !userForm.password ? 0 : 8"
                             placeholder="••••••••"
                             class="w-full px-3.5 py-2 text-xs bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                         />
@@ -413,10 +413,15 @@ const saveUser = async () => {
     formError.value = '';
 
     try {
+        const payload = { ...userForm };
+        if (editingUser.value && !payload.password) {
+            delete payload.password;
+        }
+
         if (editingUser.value) {
-            await api.put(`/users/${editingUser.value.id}`, userForm);
+            await api.put(`/users/${editingUser.value.id}`, payload);
         } else {
-            await api.post('/users', userForm);
+            await api.post('/users', payload);
         }
         closeModal();
         await fetchUsers();
