@@ -14,7 +14,7 @@
             <button
                 type="button"
                 @click="openCreateModal"
-                class="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition self-start sm:self-auto"
+                class="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition self-start sm:self-auto cursor-pointer"
             >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -71,7 +71,7 @@
 
             <div v-else-if="users.length === 0" class="py-12 text-center space-y-2">
                 <div class="text-slate-400 dark:text-slate-500 text-sm">No members found matching your search.</div>
-                <button @click="openCreateModal" class="text-xs text-indigo-500 hover:underline font-semibold">
+                <button @click="openCreateModal" class="text-xs text-indigo-500 hover:underline font-semibold cursor-pointer">
                     + Add your first team member
                 </button>
             </div>
@@ -149,14 +149,16 @@
                             <td class="py-3.5 px-3 text-right">
                                 <div class="flex items-center justify-end gap-2">
                                     <button
+                                        type="button"
                                         @click="openEditModal(user)"
-                                        class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+                                        class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
                                     >
                                         Edit
                                     </button>
                                     <button
+                                        type="button"
                                         @click="confirmDelete(user)"
-                                        class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/30 text-slate-400 hover:text-rose-500 transition"
+                                        class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/30 text-slate-400 hover:text-rose-500 transition cursor-pointer"
                                     >
                                         Delete
                                     </button>
@@ -170,7 +172,7 @@
 
         <!-- Add / Edit Member Modal -->
         <Modal
-            :is-open="isModalOpen"
+            v-model="isModalOpen"
             :title="editingUser ? 'Edit Member Card' : 'Add New Organization Member'"
             @close="closeModal"
         >
@@ -272,7 +274,7 @@
                         type="checkbox"
                         id="user_active"
                         v-model="userForm.is_active"
-                        class="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500"
+                        class="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                     />
                     <label for="user_active" class="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
                         Account is Active (can sign in to CRM)
@@ -284,14 +286,14 @@
                     <button
                         type="button"
                         @click="closeModal"
-                        class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                        class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         :disabled="saving"
-                        class="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition disabled:opacity-50 flex items-center gap-2"
+                        class="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                     >
                         <svg v-if="saving" class="animate-spin h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

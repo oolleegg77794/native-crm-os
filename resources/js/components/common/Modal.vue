@@ -9,7 +9,7 @@
             leave-to-class="opacity-0"
         >
             <div
-                v-if="modelValue"
+                v-if="isVisible"
                 class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
                 @click.self="close"
             >
@@ -22,23 +22,23 @@
                     leave-to-class="opacity-0 scale-95 translate-y-2"
                 >
                     <div
-                        v-if="modelValue"
-                        class="w-full max-h-[90vh] flex flex-col bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden glass-panel"
+                        v-if="isVisible"
+                        class="w-full max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden glass-panel text-slate-900 dark:text-slate-100"
                         :class="sizeClass"
                     >
                         <!-- Header -->
-                        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800/80">
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800/80">
                             <div>
-                                <h3 class="text-lg font-semibold text-white tracking-tight">
+                                <h3 class="text-lg font-semibold text-slate-900 dark:text-white tracking-tight">
                                     {{ title }}
                                 </h3>
-                                <p v-if="subtitle" class="text-xs text-slate-400 mt-0.5">
+                                <p v-if="subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                     {{ subtitle }}
                                 </p>
                             </div>
                             <button
                                 type="button"
-                                class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                                 @click="close"
                             >
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- Footer -->
-                        <div v-if="$slots.footer" class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800/80 bg-slate-900/50">
+                        <div v-if="$slots.footer" class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900/50">
                             <slot name="footer" />
                         </div>
                     </div>
@@ -67,16 +67,20 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-    modelValue: { type: Boolean, required: true },
+    modelValue: { type: Boolean, default: false },
+    isOpen: { type: Boolean, default: false },
     title: { type: String, default: '' },
     subtitle: { type: String, default: '' },
     size: { type: String, default: 'md' }, // sm, md, lg, xl, 2xl, full
 });
 
-const emit = defineEmits(['update:modelValue', 'close']);
+const emit = defineEmits(['update:modelValue', 'update:isOpen', 'close']);
+
+const isVisible = computed(() => props.modelValue || props.isOpen);
 
 const close = () => {
     emit('update:modelValue', false);
+    emit('update:isOpen', false);
     emit('close');
 };
 
