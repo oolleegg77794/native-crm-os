@@ -1,18 +1,17 @@
 services:
-  # 1. Gateway - Nginx Reverse Proxy (Entrypoint on port 80)
+  # 1. Gateway - Nginx Reverse Proxy (Internal Gateway for Native CRM)
   gateway:
     build:
       context: .
       dockerfile: docker/gateway/Dockerfile
     container_name: crm_gateway
     restart: unless-stopped
-    ports:
-      - "80:80"
     depends_on:
       - backend
       - frontend
     networks:
       - crm_network
+      - web-proxy-network
 
   # 2. Backend - Laravel 11 Core (PHP 8.3 with pdo_pgsql, redis, opcache)
   backend:
@@ -104,6 +103,8 @@ services:
 networks:
   crm_network:
     driver: bridge
+  web-proxy-network:
+    external: true
 
 volumes:
   postgres_data:
