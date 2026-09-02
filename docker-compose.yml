@@ -24,12 +24,12 @@ services:
       - .:/var/www/html
     environment:
       APP_NAME: "Native CRM"
-      APP_ENV: local
+      APP_ENV: production
       APP_KEY: "base64:OL/s4P0gBHf8a/R7uLOSEfq7EGUM+M6XW6aXC2IiKLg="
-      APP_DEBUG: "true"
-      APP_URL: "http://localhost"
+      APP_DEBUG: "false"
+      APP_URL: "https://crm.osapps.site"
       DB_CONNECTION: pgsql
-      DB_HOST: postgres
+      DB_HOST: global_postgres
       DB_PORT: 5432
       DB_DATABASE: crm_database
       DB_USERNAME: crm_user
@@ -40,41 +40,17 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
     networks:
       - crm_network
+      - web-proxy-network
 
-  # 3. Database - PostgreSQL 16 (JSONB & GIN Indexes)
-  postgres:
-    image: postgres:16-alpine
-    container_name: crm_postgres
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: crm_database
-      POSTGRES_USER: crm_user
-      POSTGRES_PASSWORD: crm_secret_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U crm_user -d crm_database"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - crm_network
-
-  # 4. Cache & Queues - Redis 7
+  # 3. Cache & Queues - Redis 7
   redis:
     image: redis:7-alpine
     container_name: crm_redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -85,15 +61,13 @@ services:
     networks:
       - crm_network
 
-  # 5. Frontend - Vue 3 + Vite SPA Dev Server
+  # 4. Frontend - Vue 3 + Vite SPA Dev Server
   frontend:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
     container_name: crm_frontend
     restart: unless-stopped
-    ports:
-      - "5173:5173"
     volumes:
       - .:/app
       - /app/node_modules
@@ -107,7 +81,5 @@ networks:
     external: true
 
 volumes:
-  postgres_data:
-    driver: local
   redis_data:
     driver: local
