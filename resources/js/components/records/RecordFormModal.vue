@@ -19,7 +19,7 @@
         <template #footer>
             <button
                 type="button"
-                class="px-4 py-2 text-sm font-medium rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 transition"
+                class="px-4 py-2 text-sm font-medium rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm"
                 @click="$emit('update:modelValue', false)"
             >
                 Cancel

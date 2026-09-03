@@ -1,16 +1,16 @@
 <template>
     <div class="relative" ref="containerRef">
-        <label v-if="label" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+        <label v-if="label" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
             {{ label }}
-            <span v-if="required" class="text-rose-400 font-bold">*</span>
+            <span v-if="required" class="text-rose-500 font-bold">*</span>
         </label>
 
         <!-- Selected Badge or Search Input -->
         <div class="relative">
             <div
                 v-if="selectedLabel && !isSearching"
-                class="flex items-center justify-between px-3.5 py-2 text-sm bg-slate-950/60 border border-slate-800 rounded-xl text-slate-100"
-                :class="readonly ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-slate-700'"
+                class="flex items-center justify-between px-3.5 py-2 text-sm bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 shadow-sm"
+                :class="readonly ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-slate-300 dark:hover:border-slate-700'"
                 @click="!readonly ? openSearch() : null"
             >
                 <div class="flex items-center gap-2 truncate">
@@ -21,7 +21,7 @@
                 <button
                     v-if="!readonly"
                     type="button"
-                    class="text-slate-400 hover:text-rose-400 p-0.5 rounded transition"
+                    class="text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 p-0.5 rounded transition"
                     @click.stop="clearSelection"
                 >
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,12 +37,12 @@
                     v-model="searchTerm"
                     :disabled="readonly"
                     :placeholder="placeholder || `Search ${targetModule}...`"
-                    class="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-950/60 border rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition disabled:opacity-50"
-                    :class="error ? 'border-rose-500/80 ring-1 ring-rose-500/30' : 'border-slate-800'"
+                    class="w-full pl-9 pr-3.5 py-2 text-sm bg-white dark:bg-slate-950/60 border rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 shadow-sm transition disabled:opacity-50"
+                    :class="error ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-slate-200 dark:border-slate-800'"
                     @focus="isOpen = true"
                     @input="handleSearch"
                 />
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 dark:text-slate-500">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -61,17 +61,17 @@
         >
             <div
                 v-if="isOpen && !readonly"
-                class="absolute z-50 mt-1 w-full max-h-60 rounded-xl glass-dropdown p-1.5 shadow-2xl overflow-y-auto"
+                class="absolute z-50 mt-1 w-full max-h-60 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 shadow-2xl overflow-y-auto"
             >
-                <div v-if="loading" class="px-3 py-2 text-xs text-slate-400 flex items-center gap-2">
-                    <svg class="animate-spin h-3.5 w-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none">
+                <div v-if="loading" class="px-3 py-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <svg class="animate-spin h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
                     Searching {{ targetModule }}...
                 </div>
 
-                <div v-else-if="results.length === 0" class="px-3 py-2 text-xs text-slate-400">
+                <div v-else-if="results.length === 0" class="px-3 py-2 text-xs text-slate-500 dark:text-slate-400">
                     No matching records found.
                 </div>
 
@@ -79,7 +79,7 @@
                     v-for="item in results"
                     :key="item.id"
                     type="button"
-                    class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-indigo-600/20 hover:text-white flex items-center justify-between transition"
+                    class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-600/20 hover:text-indigo-600 dark:hover:text-white flex items-center justify-between transition"
                     @click="selectItem(item)"
                 >
                     <span class="truncate font-medium">{{ item.label }}</span>

@@ -7,11 +7,11 @@
             Activity Timeline ({{ timeline.length }})
         </h4>
 
-        <div v-if="timeline.length === 0" class="text-xs text-slate-500 py-4 text-center">
+        <div v-if="timeline.length === 0" class="text-xs text-slate-400 dark:text-slate-500 py-4 text-center">
             No activity history yet.
         </div>
 
-        <div v-else class="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-800">
+        <div v-else class="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
             <div
                 v-for="event in timeline"
                 :key="event.id"
@@ -19,34 +19,34 @@
             >
                 <!-- Dot icon -->
                 <div
-                    class="absolute -left-6 top-1 w-4 h-4 rounded-full border-2 border-slate-900 flex items-center justify-center"
+                    class="absolute -left-6 top-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 flex items-center justify-center shadow-sm"
                     :class="eventColor(event.event_type)"
                 >
                     <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
                 </div>
 
                 <!-- Event Details Card -->
-                <div class="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/80 space-y-2">
+                <div class="p-3.5 rounded-xl bg-slate-50/90 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-2">
                     <div class="flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-1.5 font-medium text-slate-200">
-                            <span class="capitalize font-semibold text-indigo-400">{{ event.event_type }}</span>
-                            <span v-if="event.user" class="text-slate-400">by {{ event.user.name }}</span>
+                        <div class="flex items-center gap-1.5 font-medium text-slate-800 dark:text-slate-200">
+                            <span class="capitalize font-semibold text-indigo-600 dark:text-indigo-400">{{ event.event_type }}</span>
+                            <span v-if="event.user" class="text-slate-500 dark:text-slate-400">by {{ event.user.name }}</span>
                         </div>
-                        <span class="text-slate-500 font-mono text-[11px]">{{ formatDate(event.created_at) }}</span>
+                        <span class="text-slate-400 dark:text-slate-500 font-mono text-[11px]">{{ formatDate(event.created_at) }}</span>
                     </div>
 
                     <!-- Changes Diff Box -->
-                    <div v-if="event.changes && (event.changes.old || event.changes.new)" class="mt-2 space-y-1.5 bg-slate-950/60 rounded-lg p-2.5 border border-slate-800/60 text-xs">
+                    <div v-if="event.changes && (event.changes.old || event.changes.new)" class="mt-2 space-y-1.5 bg-white dark:bg-slate-950/60 rounded-lg p-2.5 border border-slate-200 dark:border-slate-800/60 text-xs">
                         <div
                             v-for="(newVal, field) in (event.changes.new || {})"
                             :key="field"
                             class="grid grid-cols-3 gap-2 py-0.5 text-[11px]"
                         >
-                            <span class="font-semibold text-slate-400 truncate">{{ field }}:</span>
-                            <span class="text-rose-400/80 line-through truncate font-mono">
+                            <span class="font-semibold text-slate-600 dark:text-slate-400 truncate">{{ field }}:</span>
+                            <span class="text-rose-500 dark:text-rose-400/80 line-through truncate font-mono">
                                 {{ formatVal(event.changes.old?.[field]) }}
                             </span>
-                            <span class="text-emerald-400 font-mono truncate">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-mono truncate">
                                 {{ formatVal(newVal) }}
                             </span>
                         </div>

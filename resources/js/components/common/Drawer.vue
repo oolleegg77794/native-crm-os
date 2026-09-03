@@ -23,21 +23,21 @@
                 >
                     <div
                         v-if="modelValue"
-                        class="w-full max-w-md h-full flex flex-col bg-slate-900 border-l border-slate-800 shadow-2xl overflow-hidden glass-panel"
+                        class="w-full max-w-md h-full flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden glass-panel text-slate-900 dark:text-slate-100"
                     >
                         <!-- Header -->
-                        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
                             <div>
-                                <h3 class="text-base font-semibold text-white">
+                                <h3 class="text-base font-semibold text-slate-900 dark:text-white">
                                     {{ title }}
                                 </h3>
-                                <p v-if="subtitle" class="text-xs text-slate-400 mt-0.5">
+                                <p v-if="subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                     {{ subtitle }}
                                 </p>
                             </div>
                             <button
                                 type="button"
-                                class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                                 @click="close"
                             >
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,7 +52,7 @@
                         </div>
 
                         <!-- Footer -->
-                        <div v-if="$slots.footer" class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800 bg-slate-900/60">
+                        <div v-if="$slots.footer" class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
                             <slot name="footer" />
                         </div>
                     </div>

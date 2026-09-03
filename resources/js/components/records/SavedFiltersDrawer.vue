@@ -8,13 +8,13 @@
     >
         <div class="space-y-5">
             <!-- Filter Logic (AND / OR) -->
-            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-slate-800">
-                <span class="text-xs font-semibold text-slate-300">Match conditions:</span>
-                <div class="flex items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Match conditions:</span>
+                <div class="flex items-center gap-1 bg-white dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800">
                     <button
                         type="button"
                         class="px-2.5 py-1 rounded-md text-xs font-medium transition"
-                        :class="logic === 'and' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'"
+                        :class="logic === 'and' ? 'bg-indigo-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
                         @click="logic = 'and'"
                     >
                         AND (All)
@@ -22,7 +22,7 @@
                     <button
                         type="button"
                         class="px-2.5 py-1 rounded-md text-xs font-medium transition"
-                        :class="logic === 'or' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'"
+                        :class="logic === 'or' ? 'bg-indigo-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
                         @click="logic = 'or'"
                     >
                         OR (Any)
@@ -35,13 +35,13 @@
                 <div
                     v-for="(rule, rIdx) in conditions"
                     :key="rIdx"
-                    class="p-3.5 rounded-xl bg-slate-950/40 border border-slate-800 space-y-2.5"
+                    class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 space-y-2.5"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-indigo-400">Rule #{{ rIdx + 1 }}</span>
+                        <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Rule #{{ rIdx + 1 }}</span>
                         <button
                             type="button"
-                            class="text-slate-500 hover:text-rose-400 p-0.5 rounded transition"
+                            class="text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 p-0.5 rounded transition"
                             @click="removeRule(rIdx)"
                         >
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +53,7 @@
                     <!-- Field Select -->
                     <select
                         v-model="rule.field"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-800 rounded-lg text-slate-100 focus:outline-none focus:border-indigo-500"
+                        class="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 focus:outline-none focus:border-indigo-500"
                     >
                         <option value="" disabled selected>Select field...</option>
                         <option v-for="f in module.fields" :key="f.api_name" :value="f.api_name">
@@ -64,7 +64,7 @@
                     <!-- Operator Select -->
                     <select
                         v-model="rule.operator"
-                        class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-800 rounded-lg text-slate-100 focus:outline-none focus:border-indigo-500"
+                        class="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 focus:outline-none focus:border-indigo-500"
                     >
                         <option value="=">Equals (=)</option>
                         <option value="!=">Not Equals (!=)</option>
@@ -84,7 +84,7 @@
                         type="text"
                         v-model="rule.value"
                         placeholder="Value..."
-                        class="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                        class="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                     />
                 </div>
             </div>
@@ -92,7 +92,7 @@
             <!-- Add Rule Button -->
             <button
                 type="button"
-                class="w-full py-2 text-xs font-semibold text-indigo-400 hover:text-indigo-300 border border-dashed border-indigo-500/30 hover:border-indigo-500/60 rounded-xl transition flex items-center justify-center gap-1.5"
+                class="w-full py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 border border-dashed border-indigo-500/30 hover:border-indigo-500/60 rounded-xl transition flex items-center justify-center gap-1.5"
                 @click="addRule"
             >
                 + Add Condition
@@ -102,7 +102,7 @@
         <template #footer>
             <button
                 type="button"
-                class="px-3 py-2 text-xs font-medium rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 transition"
+                class="px-3 py-2 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                 @click="clearFilters"
             >
                 Reset

@@ -4,9 +4,9 @@
         <div
             v-for="(section, sIdx) in formSections"
             :key="sIdx"
-            class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4"
+            class="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 space-y-4"
         >
-            <h4 class="text-sm font-semibold text-indigo-400 tracking-wide uppercase flex items-center gap-2">
+            <h4 class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase flex items-center gap-2">
                 <span class="w-1.5 h-4 bg-indigo-500 rounded-full"></span>
                 {{ section.title }}
             </h4>
@@ -34,10 +34,10 @@
         <!-- Fallback if any fields not placed in sections -->
         <div
             v-if="unassignedFields.length > 0"
-            class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 space-y-4"
+            class="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 space-y-4"
         >
-            <h4 class="text-sm font-semibold text-slate-400 tracking-wide uppercase flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-slate-600 rounded-full"></span>
+            <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-400 tracking-wide uppercase flex items-center gap-2">
+                <span class="w-1.5 h-4 bg-slate-400 dark:bg-slate-600 rounded-full"></span>
                 Additional Details
             </h4>
 

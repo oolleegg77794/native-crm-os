@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
             <router-link
                 :to="`/m/${moduleApi}`"
-                class="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition"
+                class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition"
             >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -15,14 +15,14 @@
             <div class="flex items-center gap-2">
                 <button
                     type="button"
-                    class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+                    class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-sm transition"
                     @click="isEditModalOpen = true"
                 >
                     Edit Record
                 </button>
                 <button
                     type="button"
-                    class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 transition"
+                    class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/20 shadow-sm transition"
                     @click="handleDelete"
                 >
                     Delete
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Record Title Header Card -->
-        <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 glass-panel shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 glass-panel shadow-sm dark:shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div
                     class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-xl font-bold text-lg"
@@ -40,13 +40,13 @@
                     {{ (recordTitle || 'R').charAt(0) }}
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                         {{ recordTitle }}
                     </h1>
-                    <div class="flex items-center gap-3 text-xs text-slate-400 mt-1">
-                        <span>Record ID: <span class="font-mono text-slate-300">#{{ recordId }}</span></span>
+                    <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        <span>Record ID: <span class="font-mono text-slate-700 dark:text-slate-300">#{{ recordId }}</span></span>
                         <span>&bull;</span>
-                        <span>Owner: <span class="text-slate-300">{{ record?.owner?.name || 'Unassigned' }}</span></span>
+                        <span>Owner: <span class="text-slate-700 dark:text-slate-300">{{ record?.owner?.name || 'Unassigned' }}</span></span>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 <Badge variant="primary" v-if="record?.is_locked">
                     Locked
                 </Badge>
-                <span class="text-xs text-slate-500 font-mono">
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">
                     v{{ record?.version || 1 }}
                 </span>
             </div>
@@ -65,8 +65,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left 2 Cols: Fields details -->
             <div class="lg:col-span-2 space-y-6">
-                <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 glass-panel space-y-6">
-                    <h3 class="text-sm font-semibold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 glass-panel shadow-sm space-y-6">
+                    <h3 class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-2">
                         <span class="w-1.5 h-4 bg-indigo-500 rounded-full"></span>
                         Record Details
                     </h3>
@@ -77,20 +77,20 @@
                             :key="apiName"
                             class="space-y-1"
                         >
-                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                 {{ fInfo.label }}
                             </span>
 
                             <!-- Lookup -->
-                            <div v-if="fInfo.type === 'lookup'" class="text-sm font-medium text-slate-200">
-                                <span v-if="record.lookups?.[apiName]" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-xs font-medium">
+                            <div v-if="fInfo.type === 'lookup'" class="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                <span v-if="record.lookups?.[apiName]" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 text-xs font-medium">
                                     {{ record.lookups[apiName].label }}
                                 </span>
-                                <span v-else class="text-slate-500">—</span>
+                                <span v-else class="text-slate-400 dark:text-slate-500">—</span>
                             </div>
 
                             <!-- Currency -->
-                            <div v-else-if="fInfo.type === 'currency'" class="text-sm font-mono font-semibold text-emerald-400">
+                            <div v-else-if="fInfo.type === 'currency'" class="text-sm font-mono font-semibold text-emerald-600 dark:text-emerald-400">
                                 ${{ Number(fInfo.value || 0).toLocaleString() }}
                             </div>
 
@@ -99,19 +99,19 @@
                                 <Badge v-if="fInfo.value" variant="primary">
                                     {{ fInfo.value }}
                                 </Badge>
-                                <span v-else class="text-slate-500 text-sm">—</span>
+                                <span v-else class="text-slate-400 dark:text-slate-500 text-sm">—</span>
                             </div>
 
                             <!-- Boolean -->
                             <div v-else-if="fInfo.type === 'boolean'">
                                 <span
                                     class="inline-block w-3 h-3 rounded-full"
-                                    :class="fInfo.value ? 'bg-emerald-400' : 'bg-slate-600'"
+                                    :class="fInfo.value ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'"
                                 />
                             </div>
 
                             <!-- Default text -->
-                            <div v-else class="text-sm font-medium text-slate-200">
+                            <div v-else class="text-sm font-medium text-slate-800 dark:text-slate-200">
                                 {{ fInfo.value || '—' }}
                             </div>
                         </div>
@@ -121,7 +121,7 @@
 
             <!-- Right 1 Col: Timeline -->
             <div class="space-y-6">
-                <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 glass-panel">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 glass-panel shadow-sm">
                     <TimelineView :timeline="record?.timeline || []" />
                 </div>
             </div>

@@ -1,16 +1,16 @@
 <template>
-    <div class="w-full overflow-hidden border border-slate-800 rounded-2xl bg-slate-900/60 glass-panel shadow-xl">
+    <div class="w-full overflow-hidden border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900/60 glass-panel shadow-sm dark:shadow-xl">
         <!-- Table Scroll Container -->
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
-                    <tr class="border-b border-slate-800/80 bg-slate-950/50 text-slate-400 text-xs uppercase font-semibold tracking-wider select-none">
+                    <tr class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/90 dark:bg-slate-950/50 text-slate-600 dark:text-slate-400 text-xs uppercase font-semibold tracking-wider select-none">
                         <!-- Select All Checkbox -->
                         <th class="w-10 px-4 py-3.5 text-center">
                             <input
                                 type="checkbox"
                                 :checked="allSelected"
-                                class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-950 cursor-pointer"
+                                class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-white dark:focus:ring-offset-slate-950 cursor-pointer"
                                 @change="$emit('toggleSelectAll')"
                             />
                         </th>
@@ -19,12 +19,12 @@
                         <th
                             v-for="col in displayColumns"
                             :key="col.api_name"
-                            class="px-4 py-3.5 cursor-pointer hover:text-slate-200 transition group"
+                            class="px-4 py-3.5 cursor-pointer hover:text-slate-900 dark:hover:text-slate-200 transition group"
                             @click="$emit('sort', col.api_name)"
                         >
                             <div class="flex items-center gap-1.5">
                                 <span>{{ col.label }}</span>
-                                <span v-if="sortBy === col.api_name" class="text-indigo-400">
+                                <span v-if="sortBy === col.api_name" class="text-indigo-600 dark:text-indigo-400">
                                     <svg v-if="sortDir === 'asc'" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
                                     </svg>
@@ -51,11 +51,11 @@
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-slate-800/60">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
                     <tr v-if="loading" class="animate-pulse">
-                        <td :colspan="displayColumns.length + 4" class="px-4 py-12 text-center text-slate-400">
+                        <td :colspan="displayColumns.length + 4" class="px-4 py-12 text-center text-slate-500 dark:text-slate-400">
                             <div class="flex items-center justify-center gap-3">
-                                <svg class="animate-spin h-5 w-5 text-indigo-400" viewBox="0 0 24 24" fill="none">
+                                <svg class="animate-spin h-5 w-5 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                                 </svg>
@@ -67,13 +67,13 @@
                     <tr v-else-if="records.length === 0">
                         <td :colspan="displayColumns.length + 4" class="px-4 py-16 text-center">
                             <div class="max-w-sm mx-auto space-y-3">
-                                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto border border-indigo-500/20">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto border border-indigo-500/20">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                     </svg>
                                 </div>
-                                <h3 class="text-sm font-semibold text-slate-200">No records found</h3>
-                                <p class="text-xs text-slate-400">
+                                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-200">No records found</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">
                                     Get started by creating the first record or adjusting your search filters.
                                 </p>
                                 <button
@@ -91,8 +91,8 @@
                     <tr
                         v-for="record in records"
                         :key="record.id"
-                        class="hover:bg-slate-800/40 transition group cursor-pointer"
-                        :class="selectedIds.includes(record.id) ? 'bg-indigo-950/20' : ''"
+                        class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+                        :class="selectedIds.includes(record.id) ? 'bg-indigo-50/60 dark:bg-indigo-950/20' : ''"
                         @click="$emit('view', record.id)"
                     >
                         <!-- Row Select Checkbox -->
@@ -100,7 +100,7 @@
                             <input
                                 type="checkbox"
                                 :checked="selectedIds.includes(record.id)"
-                                class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-950 cursor-pointer"
+                                class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-white dark:focus:ring-offset-slate-950 cursor-pointer"
                                 @change="$emit('toggleSelect', record.id)"
                             />
                         </td>
@@ -109,18 +109,18 @@
                         <td
                             v-for="col in displayColumns"
                             :key="col.api_name"
-                            class="px-4 py-3.5 whitespace-nowrap text-slate-200"
+                            class="px-4 py-3.5 whitespace-nowrap text-slate-800 dark:text-slate-200"
                         >
                             <!-- Lookup Value -->
                             <div v-if="col.type === 'lookup'" class="flex items-center gap-1.5">
-                                <span v-if="record.lookups?.[col.api_name]" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300 text-xs font-medium border border-indigo-500/20">
+                                <span v-if="record.lookups?.[col.api_name]" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 text-xs font-medium border border-indigo-500/20">
                                     {{ record.lookups[col.api_name].label }}
                                 </span>
-                                <span v-else class="text-slate-500 text-xs">—</span>
+                                <span v-else class="text-slate-400 dark:text-slate-500 text-xs">—</span>
                             </div>
 
                             <!-- Currency Value -->
-                            <div v-else-if="col.type === 'currency'" class="font-mono text-emerald-400 font-medium">
+                            <div v-else-if="col.type === 'currency'" class="font-mono text-emerald-600 dark:text-emerald-400 font-medium">
                                 {{ formatCurrency(record.raw_values?.[col.api_name], col.options?.currency_code) }}
                             </div>
 
@@ -129,35 +129,35 @@
                                 <Badge v-if="record.raw_values?.[col.api_name]" variant="primary">
                                     {{ getPicklistLabel(col, record.raw_values[col.api_name]) }}
                                 </Badge>
-                                <span v-else class="text-slate-500 text-xs">—</span>
+                                <span v-else class="text-slate-400 dark:text-slate-500 text-xs">—</span>
                             </div>
 
                             <!-- Boolean Value -->
                             <div v-else-if="col.type === 'boolean'">
                                 <span
                                     class="inline-block w-2.5 h-2.5 rounded-full"
-                                    :class="record.raw_values?.[col.api_name] ? 'bg-emerald-400' : 'bg-slate-600'"
+                                    :class="record.raw_values?.[col.api_name] ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'"
                                 />
                             </div>
 
                             <!-- Date Value -->
-                            <div v-else-if="col.type === 'date' || col.type === 'datetime'" class="text-slate-300 font-mono text-xs">
+                            <div v-else-if="col.type === 'date' || col.type === 'datetime'" class="text-slate-600 dark:text-slate-300 font-mono text-xs">
                                 {{ record.raw_values?.[col.api_name] || '—' }}
                             </div>
 
                             <!-- Default Text Value (Bold for Title Field) -->
-                            <div v-else :class="col.api_name === module.title_field ? 'font-semibold text-white group-hover:text-indigo-400 transition' : 'text-slate-300'">
+                            <div v-else :class="col.api_name === module.title_field ? 'font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition' : 'text-slate-700 dark:text-slate-300'">
                                 {{ record.raw_values?.[col.api_name] || '—' }}
                             </div>
                         </td>
 
                         <!-- Owner -->
-                        <td class="px-4 py-3.5 whitespace-nowrap text-xs text-slate-400">
+                        <td class="px-4 py-3.5 whitespace-nowrap text-xs text-slate-600 dark:text-slate-400">
                             {{ record.owner?.name || '—' }}
                         </td>
 
                         <!-- Updated At -->
-                        <td class="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 font-mono">
+                        <td class="px-4 py-3.5 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400 font-mono">
                             {{ formatDate(record.updated_at) }}
                         </td>
 
@@ -166,7 +166,7 @@
                             <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition">
                                 <button
                                     type="button"
-                                    class="p-1 text-slate-400 hover:text-indigo-400 rounded-lg hover:bg-slate-800 transition"
+                                    class="p-1 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                                     title="Edit"
                                     @click="$emit('edit', record)"
                                 >
@@ -176,7 +176,7 @@
                                 </button>
                                 <button
                                     type="button"
-                                    class="p-1 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition"
+                                    class="p-1 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                                     title="Delete"
                                     @click="$emit('delete', record.id)"
                                 >
