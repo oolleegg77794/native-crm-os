@@ -5,10 +5,12 @@ services:
       context: .
       dockerfile: docker/gateway/Dockerfile
     container_name: crm_gateway
-    restart: unless-stopped
+    restart: always
+    volumes:
+      - frontend_assets:/usr/share/nginx/html:ro
     depends_on:
-      - backend
       - frontend
+      - backend
     networks:
       - crm_network
       - web-proxy-network
@@ -61,18 +63,15 @@ services:
     networks:
       - crm_network
 
-  # 4. Frontend - Vue 3 + Vite SPA Dev Server
+  # 4. Frontend Asset Builder (Compiles Vue 3 into shared volume)
   frontend:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
     container_name: crm_frontend
-    restart: unless-stopped
+    restart: "no"
     volumes:
-      - .:/app
-      - /app/node_modules
-    networks:
-      - crm_network
+      - frontend_assets:/usr/share/nginx/html
 
 networks:
   crm_network:
@@ -83,3 +82,4 @@ networks:
 volumes:
   redis_data:
     driver: local
+  frontend_assets:

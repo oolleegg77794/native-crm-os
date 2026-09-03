@@ -1,0 +1,108 @@
+services:
+  # 1. Gateway - Nginx Reverse Proxy with Dev Vite HMR routing
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/gateway/Dockerfile
+    container_name: crm_dev_gateway
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - crm_dev_network
+
+  # 2. Backend - Laravel 11 (Development Mode)
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: crm_dev_backend
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_NAME: "Native CRM (Dev)"
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: "base64:OL/s4P0gBHf8a/R7uLOSEfq7EGUM+M6XW6aXC2IiKLg="
+      APP_URL: "http://localhost:8080"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: crm_database
+      DB_USERNAME: crm_user
+      DB_PASSWORD: crm_secret_password
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - crm_dev_network
+
+  # 3. Local Database - PostgreSQL 16
+  postgres:
+    image: postgres:16-alpine
+    container_name: crm_dev_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: crm_database
+      POSTGRES_USER: crm_user
+      POSTGRES_PASSWORD: crm_secret_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - crm_dev_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm_user -d crm_database"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crm_dev_network
+
+  # 4. Cache & Queues - Redis 7
+  redis:
+    image: redis:7-alpine
+    container_name: crm_dev_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crm_dev_network
+
+  # 5. Frontend - Vite Dev Server with HMR
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile.dev
+    container_name: crm_dev_frontend
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - crm_dev_network
+
+networks:
+  crm_dev_network:
+    driver: bridge
+
+volumes:
+  crm_dev_pgdata:
+    driver: local

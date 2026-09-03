@@ -1,0 +1,86 @@
+services:
+  # 1. Gateway - Nginx Reverse Proxy (Internal Gateway for Native CRM)
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/gateway/Dockerfile
+    container_name: crm_gateway
+    restart: always
+    volumes:
+      - frontend_assets:/usr/share/nginx/html:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - crm_network
+      - web-proxy-network
+
+  # 2. Backend - Laravel 11 Core (PHP 8.3 with pdo_pgsql, redis, opcache)
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: crm_backend
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_NAME: "Native CRM"
+      APP_ENV: production
+      APP_KEY: "base64:OL/s4P0gBHf8a/R7uLOSEfq7EGUM+M6XW6aXC2IiKLg="
+      APP_DEBUG: "false"
+      APP_URL: "https://crm.osapps.site"
+      DB_CONNECTION: pgsql
+      DB_HOST: global_postgres
+      DB_PORT: 5432
+      DB_DATABASE: crm_database
+      DB_USERNAME: crm_user
+      DB_PASSWORD: crm_secret_password
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - crm_network
+      - web-proxy-network
+
+  # 3. Cache & Queues - Redis 7
+  redis:
+    image: redis:7-alpine
+    container_name: crm_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crm_network
+
+  # 4. Frontend Asset Builder (Compiles Vue 3 into shared volume)
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: crm_frontend
+    restart: "no"
+    volumes:
+      - frontend_assets:/usr/share/nginx/html
+
+networks:
+  crm_network:
+    driver: bridge
+  web-proxy-network:
+    external: true
+
+volumes:
+  redis_data:
+    driver: local
+  frontend_assets:
+

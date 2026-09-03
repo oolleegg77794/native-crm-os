@@ -1,16 +1,28 @@
-FROM node:22-alpine
+# Stage 1: Build Vue 3 static assets
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 # Copy package descriptors
 COPY package*.json ./
 
-# Install npm dependencies with legacy peer deps protection
+# Install npm dependencies
 RUN npm install --legacy-peer-deps
 
 # Copy application source
 COPY . .
 
-EXPOSE 5173
+# Build production SPA assets to dist/
+RUN npm run build
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+# Stage 2: Minimal Alpine sync container (copies files to shared volume)
+FROM alpine:latest
+
+WORKDIR /app
+
+# Copy built files into the container image
+COPY --from=builder /app/dist /dist
+
+# On start, sync all static assets to shared Nginx volume and finish
+CMD ["sh", "-c", "echo '==> Syncing frontend assets to shared volume...' && cp -r /dist/* /usr/share/nginx/html/ && echo '==> Frontend assets ready!'"]
+
