@@ -235,8 +235,11 @@ Route::prefix('v1')->middleware(['auth:sanctum', SetTenantContext::class])->grou
     Route::get('/modules/{moduleApi}/filters', [CustomViewController::class, 'indexFilters']);
     Route::post('/modules/{moduleApi}/filters', [CustomViewController::class, 'storeFilter']);
 
-    // 4. Permissions Matrix & Sharing Rules
+    // 4. Permissions Matrix & Sharing Rules & Profiles
     Route::get('/permissions/matrix', [PermissionController::class, 'getMatrix']);
+    Route::post('/permissions/profiles', [PermissionController::class, 'storeProfile']);
+    Route::put('/permissions/profiles/{id}', [PermissionController::class, 'updateProfile']);
+    Route::delete('/permissions/profiles/{id}', [PermissionController::class, 'destroyProfile']);
     Route::put('/permissions/profiles/{profileId}/modules', [PermissionController::class, 'updateProfileModulePermissions']);
     Route::put('/permissions/sharing', [PermissionController::class, 'updateSharingPermission']);
     Route::put('/permissions/profiles/{profileId}/fields', [PermissionController::class, 'updateFieldPermission']);

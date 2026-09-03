@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Core\Meta\FieldMetaService;
 use App\Core\Meta\ModuleMetaService;
+use App\Core\Permissions\PermissionEngine;
+use App\Enums\FieldAccessLevel;
 use App\Http\Controllers\Controller;
 use App\Models\FieldMeta;
 use App\Models\ModuleMeta;
@@ -16,13 +18,20 @@ class ModuleMetaController extends Controller
 {
     public function __construct(
         protected ModuleMetaService $moduleMetaService,
-        protected FieldMetaService $fieldMetaService
+        protected FieldMetaService $fieldMetaService,
+        protected PermissionEngine $permissionEngine
     ) {}
 
     public function index(Request $request): JsonResponse
     {
-        $orgId = $request->user()->organization_id;
-        $modules = $this->moduleMetaService->getModulesForOrganization($orgId);
+        $user = $request->user();
+        $modules = $this->moduleMetaService->getModulesForOrganization($user->organization_id);
+
+        if (! $user->isAdmin()) {
+            $modules = $modules->map(function (ModuleMeta $module) use ($user) {
+                return $this->filterModuleFieldsForUser($user, $module);
+            });
+        }
 
         return response()->json([
             'data' => $modules,
@@ -31,16 +40,41 @@ class ModuleMetaController extends Controller
 
     public function show(Request $request, string $apiName): JsonResponse
     {
-        $orgId = $request->user()->organization_id;
-        $module = $this->moduleMetaService->findByApiName($orgId, $apiName);
+        $user = $request->user();
+        $module = $this->moduleMetaService->findByApiName($user->organization_id, $apiName);
 
         if (! $module) {
             return response()->json(['message' => "Module [{$apiName}] not found."], 404);
         }
 
+        if (! $user->isAdmin()) {
+            $module = $this->filterModuleFieldsForUser($user, $module);
+        }
+
         return response()->json([
             'data' => $module,
         ]);
+    }
+
+    protected function filterModuleFieldsForUser($user, ModuleMeta $module): ModuleMeta
+    {
+        $accessibleFields = $module->fields->filter(function (FieldMeta $field) use ($user) {
+            $access = $this->permissionEngine->getFieldAccessLevel($user, $field);
+
+            return $access !== FieldAccessLevel::HIDDEN;
+        })->map(function (FieldMeta $field) use ($user) {
+            $access = $this->permissionEngine->getFieldAccessLevel($user, $field);
+            if ($access === FieldAccessLevel::READ) {
+                $field->is_readonly = true;
+            }
+            $field->access_level = $access->value;
+
+            return $field;
+        })->values();
+
+        $module->setRelation('fields', $accessibleFields);
+
+        return $module;
     }
 
     public function store(Request $request): JsonResponse

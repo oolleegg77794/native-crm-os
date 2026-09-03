@@ -80,5 +80,30 @@ export const useAdminStore = defineStore('admin', {
             }
             return updated;
         },
+
+        async createProfile(payload) {
+            const response = await api.post('/permissions/profiles', payload);
+            const newProfile = response.data.data;
+            this.profiles.push(newProfile);
+            await this.fetchMatrix();
+            return newProfile;
+        },
+
+        async updateProfile(profileId, payload) {
+            const response = await api.put(`/permissions/profiles/${profileId}`, payload);
+            const updated = response.data.data;
+            const idx = this.profiles.findIndex((p) => p.id === profileId);
+            if (idx !== -1) {
+                this.profiles[idx] = updated;
+            }
+            return updated;
+        },
+
+        async deleteProfile(profileId) {
+            await api.delete(`/permissions/profiles/${profileId}`);
+            this.profiles = this.profiles.filter((p) => p.id !== profileId);
+            this.profilePermissions = this.profilePermissions.filter((p) => p.profile_id !== profileId);
+            this.fieldPermissions = this.fieldPermissions.filter((p) => p.profile_id !== profileId);
+        },
     },
 });
